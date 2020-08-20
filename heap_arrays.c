@@ -45,9 +45,9 @@ void *get_fixed(FixedSizeArray *array, size_t idx) {
 
 void test_fixed() {
 	FixedSizeArray arr = new_fixed(3);
-	set_fixed(&arr, 0, (void*)1337);
-	set_fixed(&arr, 1, (void*)1);
-	set_fixed(&arr, 2, (void*)2);
+	CHECK_EQ_INT(set_fixed(&arr, 0, (void*)1337), 0);
+	CHECK_EQ_INT(set_fixed(&arr, 1, (void*)1), 0);
+	CHECK_EQ_INT(set_fixed(&arr, 2, (void*)2), 0);
 
 	CHECK_EQ_PTR(get_fixed(&arr, 0), (void*)1337);
 	CHECK_EQ_PTR(get_fixed(&arr, 1), (void*)1);
