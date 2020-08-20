@@ -16,7 +16,7 @@ typedef struct {
 // this is exactly opposite to #define B A, where B is defined as A
 
 FixedSizeArray new_fixed(size_t capacity) {
-	FixedSizeArray retval;
+	FixedSizeArray retval = {};
 	// TODO
 
 
@@ -45,7 +45,6 @@ int set_fixed(FixedSizeArray *array, size_t idx, void *elem) {
  */
 void *get_fixed(FixedSizeArray *array, size_t idx) {
 	// TODO
-	return array->array[idx];
 	return NULL;
 }
 
@@ -55,10 +54,10 @@ void test_fixed() {
 	set_fixed(&arr, 1, (void*)1);
 	set_fixed(&arr, 2, (void*)2);
 
-	CHECK_EQ_INT(get_fixed(&arr, 0), (void*)1337);
-	CHECK_EQ_INT(get_fixed(&arr, 1), (void*)1);
-	CHECK_EQ_INT(get_fixed(&arr, 2), (void*)2);
-	CHECK_EQ_INT(get_fixed(&arr, 1000), NULL);
+	CHECK_EQ_PTR(get_fixed(&arr, 0), (void*)1337);
+	CHECK_EQ_PTR(get_fixed(&arr, 1), (void*)1);
+	CHECK_EQ_PTR(get_fixed(&arr, 2), (void*)2);
+	CHECK_EQ_PTR(get_fixed(&arr, 1000), NULL);
 
 	free_fixed(&arr);
 }
@@ -118,20 +117,20 @@ void *get_simple_growing(SimpleGrowingArray *array, size_t idx) {
 
 void test_simple_growing() {
 	SimpleGrowingArray arr = new_simple_growing(3);
-	CHECK_EQ_INT(arr.length, 0);
-	CHECK_EQ_INT(arr.capacity, 3);
+	CHECK_EQ_SIZE(arr.length, (size_t)0);
+	CHECK_EQ_SIZE(arr.capacity, (size_t)3);
 
 	CHECK_EQ_INT(push_simple_growing(&arr, (void*)1337), 0);
-	CHECK_EQ_INT(arr.length, 1);
-	CHECK_EQ_INT(get_simple_growing(&arr, 0), (void*)1337);
+	CHECK_EQ_SIZE(arr.length, (size_t)1);
+	CHECK_EQ_PTR(get_simple_growing(&arr, 0), (void*)1337);
 
 	CHECK_EQ_INT(push_simple_growing(&arr, (void*)1), 0);
-	CHECK_EQ_INT(arr.length, 2);
-	CHECK_EQ_INT(get_simple_growing(&arr, 1), (void*)1);
+	CHECK_EQ_SIZE(arr.length, (size_t)2);
+	CHECK_EQ_PTR(get_simple_growing(&arr, 1), (void*)1);
 
 	CHECK_EQ_INT(push_simple_growing(&arr, (void*)2), 0);
-	CHECK_EQ_INT(arr.length, 3);
-	CHECK_EQ_INT(get_simple_growing(&arr, 2), (void*)2);
+	CHECK_EQ_SIZE(arr.length, (size_t)3);
+	CHECK_EQ_PTR(get_simple_growing(&arr, 2), (void*)2);
 
 	CHECK_EQ_INT(push_simple_growing(&arr, (void*)3), -1);
 	free_simple_growing(&arr);
@@ -190,7 +189,7 @@ void test_reallocating() {
 
 	for (size_t i = 0; i < 100; ++i) {
 		push_reallocating(&arr, (void*)1337+i);
-		CHECK_EQ_INT(get_reallocating(&arr, i), (void*)1337+i);
+		CHECK_EQ_PTR(get_reallocating(&arr, i), (void*)1337+i);
 	}
 
 	free_reallocating(&arr);
@@ -203,4 +202,5 @@ void main(int argc, char **argv) {
 	test_fixed();
 	test_simple_growing();
 	test_reallocating();
+	return 0;
 }
