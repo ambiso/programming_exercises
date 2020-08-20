@@ -52,6 +52,8 @@ void test_fixed() {
 	CHECK_EQ_PTR(get_fixed(&arr, 0), (void*)1337);
 	CHECK_EQ_PTR(get_fixed(&arr, 1), (void*)1);
 	CHECK_EQ_PTR(get_fixed(&arr, 2), (void*)2);
+
+	CHECK_EQ_INT(set_fixed(&arr, 1000, (void*)2), -1);
 	CHECK_EQ_PTR(get_fixed(&arr, 1000), NULL);
 
 	free_fixed(&arr);
@@ -115,6 +117,8 @@ void test_simple_growing() {
 	CHECK_EQ_PTR(get_simple_growing(&arr, 2), (void*)2);
 
 	CHECK_EQ_INT(push_simple_growing(&arr, (void*)3), -1);
+	CHECK_EQ_PTR(get_simple_growing(&arr, 1000), NULL);
+
 	free_simple_growing(&arr);
 }
 

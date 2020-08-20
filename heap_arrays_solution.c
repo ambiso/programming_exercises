@@ -18,16 +18,14 @@ typedef struct {
 FixedSizeArray new_fixed(size_t capacity) {
 	FixedSizeArray retval = {};
 	// TODO
-
-
 	retval.array = malloc(capacity * sizeof (void*));
 	retval.capacity = capacity;
-
 	return retval;
 }
 
 void free_fixed(FixedSizeArray *array) {
 	// TODO
+	free(array->array);
 }
 
 /**
@@ -36,7 +34,11 @@ void free_fixed(FixedSizeArray *array) {
  */
 int set_fixed(FixedSizeArray *array, size_t idx, void *elem) {
 	// TODO
+	if (idx > array->capacity) {
+		return -1;
+	}
 	array->array[idx] = elem;
+	return 0;
 }
 
 /**
@@ -45,18 +47,23 @@ int set_fixed(FixedSizeArray *array, size_t idx, void *elem) {
  */
 void *get_fixed(FixedSizeArray *array, size_t idx) {
 	// TODO
-	return NULL;
+	if (idx > array->capacity) {
+		return NULL;
+	}
+	return array->array[idx];
 }
 
 void test_fixed() {
 	FixedSizeArray arr = new_fixed(3);
-	set_fixed(&arr, 0, (void*)1337);
-	set_fixed(&arr, 1, (void*)1);
-	set_fixed(&arr, 2, (void*)2);
+	CHECK_EQ_INT(set_fixed(&arr, 0, (void*)1337), 0);
+	CHECK_EQ_INT(set_fixed(&arr, 1, (void*)1), 0);
+	CHECK_EQ_INT(set_fixed(&arr, 2, (void*)2), 0);
 
 	CHECK_EQ_PTR(get_fixed(&arr, 0), (void*)1337);
 	CHECK_EQ_PTR(get_fixed(&arr, 1), (void*)1);
 	CHECK_EQ_PTR(get_fixed(&arr, 2), (void*)2);
+
+	CHECK_EQ_INT(set_fixed(&arr, 1000, (void*)2), -1);
 	CHECK_EQ_PTR(get_fixed(&arr, 1000), NULL);
 
 	free_fixed(&arr);
@@ -110,7 +117,7 @@ int push_simple_growing(SimpleGrowingArray *array, void *elem) {
 void *get_simple_growing(SimpleGrowingArray *array, size_t idx) {
 	// TODO
 	if (idx >= array->length) {
-	return NULL;
+		return NULL;
 	}
 	return array->array[idx];
 }
@@ -133,6 +140,8 @@ void test_simple_growing() {
 	CHECK_EQ_PTR(get_simple_growing(&arr, 2), (void*)2);
 
 	CHECK_EQ_INT(push_simple_growing(&arr, (void*)3), -1);
+	CHECK_EQ_PTR(get_simple_growing(&arr, 1000), NULL);
+
 	free_simple_growing(&arr);
 }
 
@@ -195,7 +204,7 @@ void test_reallocating() {
 	free_reallocating(&arr);
 }
 
-void main(int argc, char **argv) {
+int main(int argc, char **argv) {
 	if (argc > 1) {
 		CONTINUE_AFTER_FAIL = 1;
 	}
